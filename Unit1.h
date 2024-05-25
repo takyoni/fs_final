@@ -38,7 +38,5 @@ typedef struct
 {
 	ULONGLONG Id;
 	UnicodeString Name;
-	UnicodeString Info;
-	BYTE Buffer[1024];
 } NodeStruct;
 #endif

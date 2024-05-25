@@ -56,11 +56,12 @@ void __fastcall AnalysThread::Execute()
 			//Sleep(1);
 
 			DataReadyEvent->ResetEvent();
+			Synchronize(Update);
 			DataCopiedEvent->SetEvent();
 
 			CompleteEvent-> ResetEvent();
 
-			Synchronize(Update);
+			//Synchronize(Update);
 //			PVirtualNode entryNode = Form1->MainStringTree->AddChild(Form1->MainStringTree->RootNode);
 //			NodeStruct *nodeData = (NodeStruct*)Form1->MainStringTree->GetNodeData(entryNode);
 //			nodeData->Id = data.GetNum();

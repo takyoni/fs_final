@@ -16,13 +16,6 @@ __fastcall TForm1::TForm1(TComponent* Owner)
 {
 
 	MainStringTree->NodeDataSize = sizeof(NodeStruct);
-//	PVirtualNode entryNode = MainStringTree->AddChild(MainStringTree->RootNode);
-//	NodeStruct *nodeData = (NodeStruct*)MainStringTree->GetNodeData(entryNode);
-//	nodeData->Id = 1;
-//	nodeData->Name = L"asdasd";
-//	nodeData->Info = L"dsadasd";
-//    memset(nodeData->Buffer, 0, sizeof(nodeData->Buffer));
-	//MainStringTree->EndUpdate();
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::Button1Click(TObject *Sender)

@@ -227,6 +227,12 @@
         <None Include="source\Iterators\NTFSIterator\NTFSIterator.h">
             <BuildOrder>13</BuildOrder>
         </None>
+        <CppCompile Include="source\Sqlite\sqlite3.c">
+            <BuildOrder>26</BuildOrder>
+        </CppCompile>
+        <None Include="source\Sqlite\sqlite3.h">
+            <BuildOrder>27</BuildOrder>
+        </None>
         <CppCompile Include="Unit1.cpp">
             <Form>Form1</Form>
             <FormType>dfm</FormType>
@@ -344,7 +350,13 @@
                 </DeployFile>
                 <DeployFile LocalName=".\Win32\Debug\lec 10.05.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
-                        <RemoteName>lec 10.05.exe</RemoteName>
+                        <RemoteName>lec_10_05.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName=".\Win32\Debug\lec 10.05.tds" Configuration="Debug" Class="DebugSymbols">
+                    <Platform Name="Win32">
+                        <RemoteName>lec_10_05.tds</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

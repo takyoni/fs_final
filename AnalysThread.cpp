@@ -16,6 +16,7 @@
 #include "HFS+.h"
 #include "MyFSC.h"
 #include "FileSystemCreator.h"
+#include <sqlite3.h>
 #pragma package(smart_init)
 //---------------------------------------------------------------------------
 
@@ -40,6 +41,8 @@ __fastcall AnalysThread::AnalysThread(bool CreateSuspended)
 	 DataReadyEvent = new TEvent(NULL, true, false, "", false);
 	 DataCopiedEvent = new TEvent(NULL, true, false, "", false);
 	 CompleteEvent = new TEvent(NULL, true, false, "", false);
+	 Database = OpenDatabase();
+     CreateTable(Database);
 }
 //---------------------------------------------------------------------------
 void __fastcall AnalysThread::Execute()
@@ -57,6 +60,7 @@ void __fastcall AnalysThread::Execute()
 
 			DataReadyEvent->ResetEvent();
 			Synchronize(Update);
+            InsertData();
 			DataCopiedEvent->SetEvent();
 
 			CompleteEvent-> ResetEvent();
@@ -89,3 +93,48 @@ void __fastcall AnalysThread::Update()
 	nodeData->Id = data.GetNum();
 	nodeData->Name = L"asdasd";
 }
+// Открытие БД SQLite
+sqlite3* __fastcall AnalysThread::OpenDatabase()
+{
+    sqlite3* Database;
+    int openResult = sqlite3_open16(L"../History", &Database);
+    if (openResult != SQLITE_OK) {
+        wcout << L"Ошибка открытия БД" << endl;
+    }
+    return Database;
+}
+
+// Создание таблицы
+void __fastcall AnalysThread::CreateTable(sqlite3* Database)
+{
+    char* errmsg;
+    char sql[] = "CREATE TABLE IF NOT EXISTS test("
+        "name TEXT NOT NULL,"
+        "value TEXT NOT NULL);";
+    // Создаем таблицу
+    int execResult = sqlite3_exec(Database, sql, NULL, NULL, &errmsg);
+    if (execResult != SQLITE_OK) {
+        cout << errmsg << endl;
+        wcout << L"Ошибка выполнения запроса" << endl;
+    }
+}
+void __fastcall AnalysThread::InsertData()
+{
+	sqlite3_stmt* res;  // компилируемое выражение
+	int rc = sqlite3_prepare_v2(Database, "INSERT INTO test (name, value) VALUES (?, ?)", -1, &res, 0);
+
+	sqlite3_exec(Database, "BEGIN;", nullptr, nullptr, nullptr);
+	sqlite3_bind_text(res, 1, "asd", -1, SQLITE_STATIC);
+	sqlite3_bind_text(res, 2, "dsa", -1, SQLITE_STATIC);
+	// выполняем выражение
+	int step = sqlite3_step(res);
+	// если выражение успешно выполнено
+	if (step == SQLITE_ERROR)
+	{
+		printf("Error\n");
+	}
+	sqlite3_clear_bindings(res);
+	sqlite3_reset(res);
+	sqlite3_exec(Database, "COMMIT;", nullptr, nullptr, nullptr);
+}
+

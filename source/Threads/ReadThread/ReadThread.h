@@ -11,18 +11,20 @@ class ReadThread : public TThread
 {
 private:
 	DWORD processTime;
-	__int64 ProgressId;
-    __int64 clusters;
-	bool AnalyseSeparate;
+	__int64 clusters;
+	UnicodeString DetectedFS;
+    LPCWSTR logicDisk;
 	class AnalysThread *AnalysThreadObject;
+    unsigned int clusterCount;
 protected:
 	void __fastcall Execute();
 	void __fastcall UpdateLabel();
 	void __fastcall UpdateLabel2();
-	void __fastcall UpdateProgress();
-    FSEnum __fastcall DetectFS(LPCWSTR device);
+    void __fastcall UpdateFS();
+	FSEnum __fastcall DetectFS(LPCWSTR device);
+	FileTypeEnum __fastcall GetFileType();
 public:
-	__fastcall ReadThread(bool analyseInSeparateThread, bool CreateSuspended);
+	__fastcall ReadThread(bool CreateSuspended);
 
 };
 //---------------------------------------------------------------------------

@@ -12,7 +12,7 @@
 #include "VirtualTrees.BaseAncestorVCL.hpp"
 #include "VirtualTrees.BaseTree.hpp"
 #include "VirtualTrees.hpp"
-#include "Unit1.h"
+#include "MainUnit.h"
 #include "FS.h"
 #include "NTFS.h"
 #include "windows.h"
@@ -40,11 +40,10 @@
 //      }
 //---------------------------------------------------------------------------
 
-__fastcall ReadThread::ReadThread(bool analyseInSeparateThread, bool CreateSuspended)
+__fastcall ReadThread::ReadThread(bool CreateSuspended)
 	: TThread(CreateSuspended)
 {
 	 FreeOnTerminate = true;
-	 AnalyseSeparate = analyseInSeparateThread;
 	 AnalysThreadObject = new AnalysThread(false);
 
 }
@@ -52,46 +51,38 @@ __fastcall ReadThread::ReadThread(bool analyseInSeparateThread, bool CreateSuspe
 void __fastcall ReadThread::Execute()
 {
 	//---- Place thread code here ----
-
 	DWORD startTime = GetTickCount();
-    FileSystemCreator* fsCreator = new MyFSC;
-    FSEnum fsType = DetectFS(L"\\\\.\\C:");
-    FS* fs = fsCreator->CreateFileSystem(fsType, L"\\\\.\\C:");
-    if (!fs->Init(L"\\\\.\\C:")) {
-        cout << "Init: " << GetLastError();
-        return ;
-    };
-	unsigned int clusterCount = fs->ClusterCount();
+	FileSystemCreator* fsCreator = new MyFSC;
+	//LPCWSTR logicDisk = L"\\\\.\\C:";
+	UnicodeString tempString = Form1->Edit1->Text;
+	logicDisk = tempString.c_str();
+	FSEnum fsType = DetectFS(logicDisk);
+	Synchronize(UpdateFS);
+	FS* fs = fsCreator->CreateFileSystem(fsType, logicDisk);
+	if (!fs->Init(logicDisk)) {
+		throw  "Cannot open logic disk";
+	};
+	clusterCount = fs->ClusterCount();
 	unsigned int clusterSize = fs->ClusterSize();
+	FileTypeEnum selectFileType = GetFileType();
     Iterator<Cluster>* it = new FSIteratorDecorator(
         new NTFSIterator(fs),
-        FileTypeEnum::Jpeg
+		selectFileType
 	);
 
-	for (it->First();!it->IsDone();it->Next()) {
+	for (it->First();!it->IsDone() && !Terminated;it->Next()) {
 		Cluster currentObject = it->GetCurrent();
 		clusters += 1;
-		if (AnalyseSeparate) {
-			  // анализ в доп потоке
+		// анализ в доп потоке
 
-			  // передаем данные на обработку
-			  //Sleep(1);
-			  AnalysThreadObject->Send(currentObject);
-			  AnalysThreadObject->DataReadyEvent->SetEvent();
+		// передаем данные на обработку
+		AnalysThreadObject->Send(currentObject);
+		AnalysThreadObject->DataReadyEvent->SetEvent();
 
-			  while(AnalysThreadObject->DataCopiedEvent->WaitFor(3000) != wrSignaled)
-			  { }
+		while(AnalysThreadObject->DataCopiedEvent->WaitFor(3000) != wrSignaled)
+		{ }
 
-			  AnalysThreadObject->DataCopiedEvent->ResetEvent();
-		}
-		else
-		{
-
-		// обработка
-			Sleep(70);
-		}
-		ProgressId += (100/clusterCount);
-		Synchronize(UpdateProgress);
+		AnalysThreadObject->DataCopiedEvent->ResetEvent();
 		Synchronize(UpdateLabel2);
 	}
 
@@ -108,22 +99,21 @@ void __fastcall ReadThread::Execute()
 void __fastcall ReadThread::UpdateLabel()
 {
 	UnicodeString timestr = UnicodeString(processTime);
-	Form1->Label1->Caption = timestr;
+	Form1->SearchTimeResultLabel->Caption = timestr;
 
 }
 void __fastcall ReadThread::UpdateLabel2()
 {
-	UnicodeString timestr = UnicodeString(clusters);
-	Form1->Label2->Caption = timestr;
+	Form1->CountResultLabel->Caption = clusters;
 
 }
-void __fastcall ReadThread::UpdateProgress()
+
+void __fastcall ReadThread::UpdateFS()
 {
-	UnicodeString timestr = UnicodeString();
-	Form1->ProgressBar1->Position = ProgressId;
-
+	Form1->DetectResultLabel->Caption = DetectedFS;
 }
-__fastcall FSEnum ReadThread::DetectFS(LPCWSTR device) {
+
+FSEnum __fastcall ReadThread::DetectFS(LPCWSTR device) {
     HANDLE fileHandler = CreateFileW(
         device,    // Drive to open
         GENERIC_READ,           // Access mode
@@ -145,24 +135,41 @@ __fastcall FSEnum ReadThread::DetectFS(LPCWSTR device) {
     }
 
     // ѕровер€ем сигнатуру NTFS
-    BYTE ntfsSignature[] = { 0x4E, 0x54, 0x46, 0x53 };
-    if (memcmp(buffer + 3, ntfsSignature, sizeof(ntfsSignature)) == 0) {
-        return FSEnum::NTFS;
+	BYTE ntfsSignature[] = { 0x4E, 0x54, 0x46, 0x53 };
+	if (memcmp(buffer + 3, ntfsSignature, sizeof(ntfsSignature)) == 0) {
+		DetectedFS = L"NTFS";
+		return FSEnum::NTFS;
     }
     // ѕровер€ем сигнатуру FAT16
     BYTE fat16Signature[] = { 0x1C, 0xEB, 0x52, 0x90 };
-    if (memcmp(buffer + 11, fat16Signature, sizeof(fat16Signature)) == 0) {
+	if (memcmp(buffer + 11, fat16Signature, sizeof(fat16Signature)) == 0) {
+		DetectedFS = L"FAT16";
         return FSEnum::FAT16;
     }
     // ѕровер€ем сигнатуру ExFAT
     BYTE exfatSignature[] = { 0x45, 0x78, 0x46, 0x41, 0x54 };
-    if (memcmp(buffer + 3, exfatSignature, sizeof(exfatSignature)) == 0) {
+	if (memcmp(buffer + 3, exfatSignature, sizeof(exfatSignature)) == 0) {
+		DetectedFS = L"EXFAT";
         return FSEnum::ExFAT;
     }
     // ѕровер€ем сигнатуру HFS+
     BYTE hfsPlusSignature[] = { 0x48, 0x2B, 0x0E, 0x0E };
-    if (memcmp(buffer + 1024, hfsPlusSignature, sizeof(hfsPlusSignature)) == 0) {
+	if (memcmp(buffer + 1024, hfsPlusSignature, sizeof(hfsPlusSignature)) == 0) {
+        DetectedFS = L"HFS+";
         return FSEnum::HFSp;
     }
     throw "Cannot detect fs!";
+}
+FileTypeEnum __fastcall ReadThread::GetFileType()
+{
+	if(Form1->JpegButton->Checked){
+		return  FileTypeEnum::Jpeg;
+	}
+	if(Form1->PdfButton->Checked){
+		return  FileTypeEnum::Pdf;
+	}
+	if(Form1->ExeButton->Checked){
+		return  FileTypeEnum::Exe;
+	}
+	return FileTypeEnum::Elf;
 }

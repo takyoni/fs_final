@@ -4,7 +4,7 @@
 #define AnalysThreadH
 //---------------------------------------------------------------------------
 #include <System.Classes.hpp>
-#include "Unit1.h"
+#include "MainUnit.h"
 #include "FS.h"
 #include "NTFS.h"
 #include "windows.h"
@@ -24,14 +24,15 @@ private:
 protected:
 	void __fastcall Execute();
 	Cluster data;
-    sqlite3* Database;
+	sqlite3* Database;
+    sqlite3_stmt* res;
 public:
 	__fastcall AnalysThread(bool CreateSuspended);
-	void __fastcall Send(Cluster data);
 	sqlite3* __fastcall OpenDatabase();
+	void __fastcall Send(Cluster data);
 	void __fastcall CreateTable(sqlite3* Database);
 	void __fastcall Update();
-    void __fastcall InsertData();
+	void __fastcall InsertData();
 	// события, необходимые для реализации анализа
 	TEvent *DataReadyEvent;
 	TEvent *DataCopiedEvent;

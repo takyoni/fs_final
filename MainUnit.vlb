@@ -1,0 +1,20 @@
+﻿[Button3]
+Coordinates=73,10,59,58
+
+[]
+Coordinates=10,78,93,58
+
+[Module Settings]
+ModelLayerNames=VirtualStringTree1GetText
+
+[MainStringTree]
+Coordinates=182,78,119,36
+Visible=True
+LayerNames=
+
+[SearchTimeResultLabel]
+Coordinates=142,10,53,58
+
+[CountResultLabel]
+Coordinates=10,10,53,58
+

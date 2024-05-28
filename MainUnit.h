@@ -36,6 +36,8 @@ __published:	// IDE-managed Components
 	TLabel *DetectResultLabel;
 	TEdit *Edit1;
 	TLabel *DiskNameLabel;
+	TLabel *SqlLabel;
+	TEdit *Edit2;
 	void __fastcall StopButtonClick(TObject *Sender);
 	void __fastcall Button3Click(TObject *Sender);
 	void __fastcall MainStringTreeGetText(TBaseVirtualTree *Sender, PVirtualNode Node, TColumnIndex Column, TVSTTextType TextType, UnicodeString &CellText);

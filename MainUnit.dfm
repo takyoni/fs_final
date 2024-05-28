@@ -13,49 +13,49 @@ object Form1: TForm1
   TextHeight = 15
   object SearchTimeResultLabel: TLabel
     Left = 461
-    Top = 293
+    Top = 349
     Width = 6
     Height = 15
     Caption = '0'
   end
   object CountResultLabel: TLabel
     Left = 542
-    Top = 314
+    Top = 370
     Width = 6
     Height = 15
     Caption = '0'
   end
   object FileFormatLabel: TLabel
     Left = 355
-    Top = 91
+    Top = 147
     Width = 145
     Height = 15
     Caption = #1060#1086#1088#1084#1072#1090' '#1092#1072#1081#1083#1072' '#1076#1083#1103' '#1087#1086#1080#1089#1082#1072
   end
   object SearchTimeLabel: TLabel
     Left = 355
-    Top = 293
+    Top = 349
     Width = 93
     Height = 15
     Caption = #1042#1088#1077#1084#1103' '#1085#1072' '#1087#1086#1080#1089#1082': '
   end
   object CountLabel: TLabel
     Left = 355
-    Top = 314
+    Top = 370
     Width = 165
     Height = 15
     Caption = #1050#1086#1083'-'#1074#1086' '#1085#1072#1081#1076#1077#1085#1085#1099#1093' '#1082#1083#1072#1089#1090#1077#1088#1086#1074':'
   end
   object DetectLabel: TLabel
     Left = 355
-    Top = 272
+    Top = 328
     Width = 109
     Height = 15
     Caption = #1054#1073#1085#1072#1088#1091#1078#1077#1085#1085#1072#1103' '#1060'C: '
   end
   object DetectResultLabel: TLabel
     Left = 473
-    Top = 272
+    Top = 328
     Width = 53
     Height = 15
     Caption = 'Underfind'
@@ -67,9 +67,16 @@ object Form1: TForm1
     Height = 15
     Caption = #1042#1074#1077#1076#1080#1090#1077' '#1080#1084#1103' '#1076#1080#1089#1082#1072
   end
+  object SqlLabel: TLabel
+    Left = 355
+    Top = 83
+    Width = 103
+    Height = 15
+    Caption = #1050#1091#1076#1072' '#1089#1086#1093#1088#1072#1085#1080#1090#1100' '#1041#1044
+  end
   object Panel1: TPanel
     Left = 355
-    Top = 112
+    Top = 168
     Width = 225
     Height = 129
     TabOrder = 7
@@ -115,7 +122,7 @@ object Form1: TForm1
   end
   object JpegButton: TRadioButton
     Left = 371
-    Top = 131
+    Top = 187
     Width = 113
     Height = 17
     Caption = 'jpeg'
@@ -125,7 +132,7 @@ object Form1: TForm1
   end
   object PdfButton: TRadioButton
     Left = 371
-    Top = 154
+    Top = 210
     Width = 113
     Height = 17
     Caption = 'pdf'
@@ -133,7 +140,7 @@ object Form1: TForm1
   end
   object ExeButton: TRadioButton
     Left = 371
-    Top = 177
+    Top = 233
     Width = 113
     Height = 17
     Caption = 'exe'
@@ -141,7 +148,7 @@ object Form1: TForm1
   end
   object ElfButton: TRadioButton
     Left = 371
-    Top = 200
+    Top = 256
     Width = 113
     Height = 17
     Caption = 'elf'
@@ -163,5 +170,13 @@ object Form1: TForm1
     Height = 23
     TabOrder = 8
     Text = '\\.\C:'
+  end
+  object Edit2: TEdit
+    Left = 355
+    Top = 104
+    Width = 205
+    Height = 23
+    TabOrder = 9
+    Text = '../../ClustersDB.sqlite3'
   end
 end

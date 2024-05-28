@@ -19,8 +19,8 @@ __fastcall TForm1::TForm1(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TForm1::StopButtonClick(TObject *Sender)
 {
-	thrd->Terminate();
-    delete thrd;
+    thrd->Terminate();
+	thrd->Free();
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::Button3Click(TObject *Sender)

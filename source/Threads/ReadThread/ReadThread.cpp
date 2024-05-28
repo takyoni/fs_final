@@ -54,50 +54,54 @@ __fastcall ReadThread::ReadThread(bool CreateSuspended)
 //---------------------------------------------------------------------------
 void __fastcall ReadThread::Execute()
 {
-	//---- Place thread code here ----
-	DWORD startTime = GetTickCount();
-	FileSystemCreator* fsCreator = new MyFSC;
-	//LPCWSTR logicDisk = L"\\\\.\\C:";
-	UnicodeString tempString = Form1->Edit1->Text;
-	logicDisk = tempString.c_str();
-	FSEnum fsType = DetectFS(logicDisk);
-	Synchronize(UpdateFS);
-	FS* fs = fsCreator->CreateFileSystem(fsType, logicDisk);
-	if (!fs->Init(logicDisk)) {
-		throw  "Cannot open logic disk";
-	};
-	clusterCount = fs->ClusterCount();
-	unsigned int clusterSize = fs->ClusterSize();
-	FileTypeEnum selectFileType = GetFileType();
-    Iterator<Cluster>* it = new FSIteratorDecorator(
-        new NTFSIterator(fs),
-		selectFileType
-	);
+	while(!Terminated)
+	{
+		// ждать когда будут подготовлены данные к след анализу
+		//---- Place thread code here ----
+		DWORD startTime = GetTickCount();
+		FileSystemCreator* fsCreator = new MyFSC;
+		//LPCWSTR logicDisk = L"\\\\.\\C:";
+		UnicodeString tempString = Form1->Edit1->Text;
+		logicDisk = tempString.c_str();
+		FSEnum fsType = DetectFS(logicDisk);
+		Synchronize(UpdateFS);
+		FS* fs = fsCreator->CreateFileSystem(fsType, logicDisk);
+		if (!fs->Init(logicDisk)) {
+			throw  "Cannot open logic disk";
+		};
+		clusterCount = fs->ClusterCount();
+		unsigned int clusterSize = fs->ClusterSize();
+		FileTypeEnum selectFileType = GetFileType();
+		Iterator<Cluster>* it = new FSIteratorDecorator(
+			new NTFSIterator(fs),
+			selectFileType
+		);
 
-	for (it->First();!it->IsDone() && !Terminated;it->Next()) {
-		Cluster currentObject = it->GetCurrent();
-		clusters += 1;
-		// анализ в доп потоке
+		for (it->First();!it->IsDone() && !Terminated;it->Next()) {
+			Cluster currentObject = it->GetCurrent();
+			clusters += 1;
+			// анализ в доп потоке
 
-		// передаем данные на обработку
-		AnalysThreadObject->Send(currentObject);
-		AnalysThreadObject->DataReadyEvent->SetEvent();
+			// передаем данные на обработку
+			AnalysThreadObject->Send(currentObject);
+			AnalysThreadObject->DataReadyEvent->SetEvent();
 
-		while(AnalysThreadObject->DataCopiedEvent->WaitFor(3000) != wrSignaled)
-		{ }
+			while(AnalysThreadObject->DataCopiedEvent->WaitFor(3000) != wrSignaled)
+			{ }
 
-		AnalysThreadObject->DataCopiedEvent->ResetEvent();
-		Synchronize(UpdateLabel2);
+			AnalysThreadObject->DataCopiedEvent->ResetEvent();
+			Synchronize(UpdateLabel2);
+		}
+
+		DWORD endTime = GetTickCount();
+		processTime = endTime - startTime ;
+
+		UnicodeString timestr = UnicodeString(processTime);
+		Synchronize(UpdateLabel);
+        break;
 	}
 
-	DWORD endTime = GetTickCount();
-	processTime = endTime - startTime ;
-
-	UnicodeString timestr = UnicodeString(processTime);
-	Synchronize(UpdateLabel);
-
 	AnalysThreadObject->Terminate();
-
 }
 //---------------------------------------------------------------------------
 void __fastcall ReadThread::UpdateLabel()

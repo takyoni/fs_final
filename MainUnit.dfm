@@ -63,7 +63,7 @@ object Form1: TForm1
   object DiskNameLabel: TLabel
     Left = 355
     Top = 25
-    Width = 105
+    Width = 102
     Height = 15
     Caption = #1042#1074#1077#1076#1080#1090#1077' '#1080#1084#1103' '#1076#1080#1089#1082#1072
   end

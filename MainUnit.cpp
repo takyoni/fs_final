@@ -31,7 +31,6 @@ void __fastcall TForm1::Button3Click(TObject *Sender)
 	Form1->DetectResultLabel->Caption = L"Underfind";
 
 	thrd = new ReadThread(false);
-	thrd->Resume();
 }
 //---------------------------------------------------------------------------
 void __fastcall TForm1::MainStringTreeGetText(

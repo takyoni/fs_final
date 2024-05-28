@@ -77,8 +77,8 @@
         <Icon_MainIcon>$(BDS)\bin\cbuilder_PROJECTICON.ico</Icon_MainIcon>
         <UWP_CppLogo44>$(BDS)\bin\Artwork\Windows\UWP\cppreg_UwpDefault_44.png</UWP_CppLogo44>
         <UWP_CppLogo150>$(BDS)\bin\Artwork\Windows\UWP\cppreg_UwpDefault_150.png</UWP_CppLogo150>
-        <IncludePath>source\FileSystems\HFS+\;source\FileSystems\FAT16\;source\FileSystems\ExFAT\;source\FABRIC\MyFSC\;source\FABRIC\BaseClass\;source\Sqlite\;source\Iterators\NTFSIterator\;source\Iterators\IteratorItem\;source\Iterators\BaseIterator\;source\FileSystems\NTFS\;source\FileSystems\BaseFS\;source\Decorators\IteratorDecorator\;source\Decorators\FSIteratorDecorator\;..\..\..\..\Desktop\языки\лекция 10.05\;$(IncludePath)</IncludePath>
-        <ILINK_LibraryPath>source\FileSystems\HFS+\;source\FileSystems\FAT16\;source\FileSystems\ExFAT\;source\FABRIC\MyFSC\;source\FABRIC\BaseClass\;source\Sqlite\;source\Iterators\NTFSIterator\;source\Iterators\IteratorItem\;source\Iterators\BaseIterator\;source\FileSystems\NTFS\;source\FileSystems\BaseFS\;source\Decorators\IteratorDecorator\;source\Decorators\FSIteratorDecorator\;..\..\..\..\Desktop\языки\лекция 10.05\;$(ILINK_LibraryPath)</ILINK_LibraryPath>
+        <IncludePath>source\Threads\ReadThread\;source\Threads\AnalysThread\;source\FileSystems\HFS+\;source\FileSystems\FAT16\;source\FileSystems\ExFAT\;source\FABRIC\MyFSC\;source\FABRIC\BaseClass\;source\Sqlite\;source\Iterators\NTFSIterator\;source\Iterators\IteratorItem\;source\Iterators\BaseIterator\;source\FileSystems\NTFS\;source\FileSystems\BaseFS\;source\Decorators\IteratorDecorator\;source\Decorators\FSIteratorDecorator\;..\..\..\..\Desktop\языки\лекция 10.05\;$(IncludePath)</IncludePath>
+        <ILINK_LibraryPath>source\Threads\ReadThread\;source\Threads\AnalysThread\;source\FileSystems\HFS+\;source\FileSystems\FAT16\;source\FileSystems\ExFAT\;source\FABRIC\MyFSC\;source\FABRIC\BaseClass\;source\Sqlite\;source\Iterators\NTFSIterator\;source\Iterators\IteratorItem\;source\Iterators\BaseIterator\;source\FileSystems\NTFS\;source\FileSystems\BaseFS\;source\Decorators\IteratorDecorator\;source\Decorators\FSIteratorDecorator\;..\..\..\..\Desktop\языки\лекция 10.05\;$(ILINK_LibraryPath)</ILINK_LibraryPath>
         <SanitizedProjectName>ClusterFinder</SanitizedProjectName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
@@ -149,10 +149,6 @@
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
     </PropertyGroup>
     <ItemGroup>
-        <CppCompile Include="AnalysThread.cpp">
-            <DependentOn>AnalysThread.h</DependentOn>
-            <BuildOrder>4</BuildOrder>
-        </CppCompile>
         <CppCompile Include="ClusterFinder.cpp">
             <BuildOrder>0</BuildOrder>
         </CppCompile>
@@ -165,10 +161,6 @@
             <FormType>dfm</FormType>
             <DependentOn>MainUnit.h</DependentOn>
             <BuildOrder>2</BuildOrder>
-        </CppCompile>
-        <CppCompile Include="ReadThread.cpp">
-            <DependentOn>ReadThread.h</DependentOn>
-            <BuildOrder>3</BuildOrder>
         </CppCompile>
         <CppCompile Include="source\Decorators\FSIteratorDecorator\FSIteratorDecorator.cpp">
             <BuildOrder>5</BuildOrder>
@@ -242,6 +234,14 @@
         <None Include="source\Sqlite\sqlite3ext.h">
             <BuildOrder>29</BuildOrder>
         </None>
+        <CppCompile Include="source\Threads\AnalysThread\AnalysThread.cpp">
+            <DependentOn>source\Threads\AnalysThread\AnalysThread.h</DependentOn>
+            <BuildOrder>27</BuildOrder>
+        </CppCompile>
+        <CppCompile Include="source\Threads\ReadThread\ReadThread.cpp">
+            <DependentOn>source\Threads\ReadThread\ReadThread.h</DependentOn>
+            <BuildOrder>28</BuildOrder>
+        </CppCompile>
         <FormResources Include="MainUnit.dfm"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>

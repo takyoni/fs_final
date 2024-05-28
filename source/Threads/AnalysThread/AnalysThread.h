@@ -37,7 +37,6 @@ public:
 	// события, необходимые для реализации анализа
 	TEvent *DataReadyEvent;
 	TEvent *DataCopiedEvent;
-	TEvent *CompleteEvent;
 };
 //---------------------------------------------------------------------------
 #endif

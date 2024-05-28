@@ -51,12 +51,10 @@ __fastcall AnalysThread::AnalysThread(bool CreateSuspended, LPCWSTR DatabasePath
 	
 	DataReadyEvent = new TEvent(NULL, true, false, "", false);
 	DataCopiedEvent = new TEvent(NULL, true, false, "", false);
-	CompleteEvent = new TEvent(NULL, true, false, "", false);
 }
 //---------------------------------------------------------------------------
 void __fastcall AnalysThread::Execute()
 {
-	CompleteEvent->SetEvent();
 	while(!Terminated)
 	{
 		// ждать когда будут подготовлены данные к след анализу
@@ -65,13 +63,11 @@ void __fastcall AnalysThread::Execute()
 			// Скопировать данные об объекте в локальный буфе
 
 			DataReadyEvent->ResetEvent();
-			DataCopiedEvent->SetEvent();
 			
   			Synchronize(Update);
 			InsertData();
-			
-			CompleteEvent-> ResetEvent();
-			CompleteEvent-> SetEvent();
+
+			DataCopiedEvent->SetEvent();
 		}
 	}
 	sqlite3_close(Database);
@@ -79,7 +75,6 @@ void __fastcall AnalysThread::Execute()
 
     delete DataReadyEvent;
 	delete DataCopiedEvent;
-	delete CompleteEvent;
 }
 //---------------------------------------------------------------------------
 void __fastcall AnalysThread::Send(Cluster cluster){

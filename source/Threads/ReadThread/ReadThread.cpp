@@ -44,7 +44,11 @@ __fastcall ReadThread::ReadThread(bool CreateSuspended)
 	: TThread(CreateSuspended)
 {
 	 FreeOnTerminate = true;
-	 AnalysThreadObject = new AnalysThread(false);
+
+	 UnicodeString tempString = Form1->Edit2->Text;
+	 LPCWSTR databasePath = tempString.c_str();
+
+	 AnalysThreadObject = new AnalysThread(false, databasePath);
 
 }
 //---------------------------------------------------------------------------

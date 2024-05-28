@@ -25,10 +25,11 @@ protected:
 	void __fastcall Execute();
 	Cluster data;
 	sqlite3* Database;
-    sqlite3_stmt* res;
+	sqlite3_stmt* res;
+	LPCWSTR DatabasePath;
 public:
-	__fastcall AnalysThread(bool CreateSuspended);
-	sqlite3* __fastcall OpenDatabase();
+	__fastcall AnalysThread(bool CreateSuspended, LPCWSTR DatabasePath);
+	sqlite3* __fastcall OpenDatabase(LPCWSTR DatabasePath);
 	void __fastcall Send(Cluster data);
 	void __fastcall CreateTable(sqlite3* Database);
 	void __fastcall Update();

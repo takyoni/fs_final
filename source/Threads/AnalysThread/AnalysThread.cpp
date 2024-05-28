@@ -35,12 +35,12 @@
 //      }
 //---------------------------------------------------------------------------
 
-__fastcall AnalysThread::AnalysThread(bool CreateSuspended)
+__fastcall AnalysThread::AnalysThread(bool CreateSuspended, LPCWSTR DatabasePath)
 	: TThread(CreateSuspended)
 {
 	FreeOnTerminate = true;
 
-	Database = OpenDatabase();
+	Database = OpenDatabase(DatabasePath);
 	CreateTable(Database);
 	
 	int rc = sqlite3_prepare_v2(Database, "INSERT INTO clusters (cluster_num, content) VALUES (?, ?)", -1, &res, 0);
@@ -97,10 +97,10 @@ void __fastcall AnalysThread::Update()
 	nodeData->Content = System::Sysutils::StringOf(buff);
 }
 // Открытие БД SQLite
-sqlite3* __fastcall AnalysThread::OpenDatabase()
+sqlite3* __fastcall AnalysThread::OpenDatabase(LPCWSTR DatabasePath)
 {
     sqlite3* Database;
-	int openResult = sqlite3_open16(L"../../ClustersDB.sqlite3", &Database);
+	int openResult = sqlite3_open16(DatabasePath, &Database);
 	if (openResult != SQLITE_OK) {
 		throw "Cannot open sqlite db";
     }

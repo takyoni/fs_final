@@ -23,14 +23,14 @@ class AnalysThread : public TThread
 private:
 protected:
 	void __fastcall Execute();
-	Cluster data;
+	Cluster* data;
 	sqlite3* Database;
 	sqlite3_stmt* res;
 	LPCWSTR DatabasePath;
 public:
 	__fastcall AnalysThread(bool CreateSuspended, LPCWSTR DatabasePath);
 	sqlite3* __fastcall OpenDatabase(LPCWSTR DatabasePath);
-	void __fastcall Send(Cluster data);
+	void __fastcall Send(Cluster* data);
 	void __fastcall CreateTable(sqlite3* Database);
 	void __fastcall Update();
 	void __fastcall InsertData();

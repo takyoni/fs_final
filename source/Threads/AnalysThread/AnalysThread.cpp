@@ -77,18 +77,18 @@ void __fastcall AnalysThread::Execute()
 	delete DataCopiedEvent;
 }
 //---------------------------------------------------------------------------
-void __fastcall AnalysThread::Send(Cluster cluster){
-	data=cluster;
+void __fastcall AnalysThread::Send(Cluster* cluster){
+	data = cluster;
 }
 void __fastcall AnalysThread::Update()
 {
 	TBytes buff;
     buff.set_length(10);
-	memcpy(&buff[0],  data.GetContent(), 10);
+	memcpy(&buff[0],  data->GetContent(), 10);
 
 	PVirtualNode entryNode = Form1->MainStringTree->AddChild(Form1->MainStringTree->RootNode);
 	NodeStruct *nodeData = (NodeStruct*)Form1->MainStringTree->GetNodeData(entryNode);
-	nodeData->ClusterNum = data.GetNum();
+	nodeData->ClusterNum = data->GetNum();
 	nodeData->Content = System::Sysutils::StringOf(buff);
 }
 // Открытие БД SQLite
@@ -118,10 +118,10 @@ void __fastcall AnalysThread::CreateTable(sqlite3* Database)
 void __fastcall AnalysThread::InsertData()
 {
 	char str[10];
-	memcpy(str, data.GetContent(), 10);
+	memcpy(str, data->GetContent(), 10);
 
 	sqlite3_exec(Database, "BEGIN;", nullptr, nullptr, nullptr);
-	sqlite3_bind_int(res, 1, data.GetNum());
+	sqlite3_bind_int(res, 1, data->GetNum());
 	sqlite3_bind_text(res, 2, str, -1, SQLITE_STATIC);
 
 	// выполняем выражение

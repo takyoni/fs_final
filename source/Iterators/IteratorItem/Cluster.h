@@ -6,8 +6,8 @@ enum class FileTypeEnum { Underfind, Exe, Pdf, Elf, Jpeg };
 class Cluster
 {
 private:
-	unsigned int clusterNum=0;
-	BYTE* content=NULL;
+	unsigned int clusterNum = 0;
+	BYTE* content = NULL;
 
 public:
 	void SetClusterNum(unsigned int num) {clusterNum = num;}

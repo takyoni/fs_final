@@ -12,7 +12,7 @@ object Form1: TForm1
   Font.Style = []
   TextHeight = 15
   object SearchTimeResultLabel: TLabel
-    Left = 461
+    Left = 542
     Top = 349
     Width = 6
     Height = 15
@@ -35,9 +35,9 @@ object Form1: TForm1
   object SearchTimeLabel: TLabel
     Left = 355
     Top = 349
-    Width = 93
+    Width = 145
     Height = 15
-    Caption = #1042#1088#1077#1084#1103' '#1085#1072' '#1087#1086#1080#1089#1082': '
+    Caption = #1042#1088#1077#1084#1103' '#1085#1072' '#1087#1086#1080#1089#1082' ('#1084#1089'): '
   end
   object CountLabel: TLabel
     Left = 355
@@ -54,7 +54,7 @@ object Form1: TForm1
     Caption = #1054#1073#1085#1072#1088#1091#1078#1077#1085#1085#1072#1103' '#1060'C: '
   end
   object DetectResultLabel: TLabel
-    Left = 473
+    Left = 495
     Top = 328
     Width = 53
     Height = 15

@@ -61,8 +61,10 @@ void __fastcall ReadThread::Execute()
 		DWORD startTime = GetTickCount();
 		FileSystemCreator* fsCreator = new MyFSC;
 		//LPCWSTR logicDisk = L"\\\\.\\C:";
+
 		UnicodeString tempString = Form1->Edit1->Text;
 		logicDisk = tempString.c_str();
+
 		FSEnum fsType = DetectFS(logicDisk);
 		Synchronize(UpdateFS);
 		FS* fs = fsCreator->CreateFileSystem(fsType, logicDisk);
@@ -83,7 +85,7 @@ void __fastcall ReadThread::Execute()
 			// анализ в доп потоке
 
 			// передаем данные на обработку
-			AnalysThreadObject->Send(currentObject);
+			AnalysThreadObject->Send(&currentObject);
 			AnalysThreadObject->DataReadyEvent->SetEvent();
 
 			while(AnalysThreadObject->DataCopiedEvent->WaitFor(3000) != wrSignaled)

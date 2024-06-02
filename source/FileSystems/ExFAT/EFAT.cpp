@@ -1,4 +1,5 @@
 #include "EFAT.h"
+#include "Iterator.h"
 #include <iostream>
 #include "windows.h"
 #include "stdio.h"
@@ -24,9 +25,11 @@ bool EFAT::ReadClusterSize()
         CloseHandle(fileHandler);
         return false;
     }
-    unsigned int sectorSize = pow (2, sector[108]); //размер сектора
-    unsigned int classCoeff = pow (2, sector[109]); //кластерный множитель
-    clusterSize = sectorSize * classCoeff;
-    return true;
+   BootRecord* pBootRecord = reinterpret_cast<BootRecord*>(sector);
+   unsigned int sectorSize = pow (2, sector[108]); //Размер сектора
+   unsigned int classCoeff = pow (2, sector[109]); //Кластерный множитель
+   clusterSize = sectorSize * classCoeff;
+   unsigned int countSectors = static_cast<unsigned int>(pBootRecord->countSectors); // Количество секторов в ФС
+   clusterCount = countSectors / classCoeff;
+   return true;
 }
-

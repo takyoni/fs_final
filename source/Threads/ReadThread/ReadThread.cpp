@@ -56,7 +56,7 @@ void __fastcall ReadThread::Execute()
 {
 	while(!Terminated)
 	{
-		// ждать когда будут подготовлены данные к след анализу
+		// Г¦Г¤Г ГІГј ГЄГ®ГЈГ¤Г  ГЎГіГ¤ГіГІ ГЇГ®Г¤ГЈГ®ГІГ®ГўГ«ГҐГ­Г» Г¤Г Г­Г­Г»ГҐ ГЄ Г±Г«ГҐГ¤ Г Г­Г Г«ГЁГ§Гі
 		//---- Place thread code here ----
 		DWORD startTime = GetTickCount();
 		FileSystemCreator* fsCreator = new MyFSC;
@@ -82,9 +82,9 @@ void __fastcall ReadThread::Execute()
 		for (it->First();!it->IsDone() && !Terminated;it->Next()) {
 			Cluster currentObject = it->GetCurrent();
 			clusters += 1;
-			// анализ в доп потоке
+			// Г Г­Г Г«ГЁГ§ Гў Г¤Г®ГЇ ГЇГ®ГІГ®ГЄГҐ
 
-			// передаем данные на обработку
+			// ГЇГҐГ°ГҐГ¤Г ГҐГ¬ Г¤Г Г­Г­Г»ГҐ Г­Г  Г®ГЎГ°Г ГЎГ®ГІГЄГі
 			AnalysThreadObject->Send(&currentObject);
 			AnalysThreadObject->DataReadyEvent->SetEvent();
 
@@ -139,30 +139,30 @@ FSEnum __fastcall ReadThread::DetectFS(LPCWSTR device) {
     }
     DWORD bytesRead;
     BYTE buffer[2048];
-    // Читаем первые 2048 байт
+    // Г—ГЁГІГ ГҐГ¬ ГЇГҐГ°ГўГ»ГҐ 2048 ГЎГ Г©ГІ
     if (!ReadFile(fileHandler, buffer, sizeof(buffer), &bytesRead, nullptr)) {
         throw "Error reading volume\n";
     }
 
-    // Проверяем сигнатуру NTFS
+    // ГЏГ°Г®ГўГҐГ°ГїГҐГ¬ Г±ГЁГЈГ­Г ГІГіГ°Гі NTFS
 	BYTE ntfsSignature[] = { 0x4E, 0x54, 0x46, 0x53 };
 	if (memcmp(buffer + 3, ntfsSignature, sizeof(ntfsSignature)) == 0) {
 		DetectedFS = L"NTFS";
 		return FSEnum::NTFS;
     }
-    // Проверяем сигнатуру FAT16
+    // ГЏГ°Г®ГўГҐГ°ГїГҐГ¬ Г±ГЁГЈГ­Г ГІГіГ°Гі FAT16
     BYTE fat16Signature[] = { 0x1C, 0xEB, 0x52, 0x90 };
 	if (memcmp(buffer + 11, fat16Signature, sizeof(fat16Signature)) == 0) {
 		DetectedFS = L"FAT16";
         return FSEnum::FAT16;
     }
-    // Проверяем сигнатуру ExFAT
-    BYTE exfatSignature[] = { 0x45, 0x78, 0x46, 0x41, 0x54 };
+    // ГЏГ°Г®ГўГҐГ°ГїГҐГ¬ Г±ГЁГЈГ­Г ГІГіГ°Гі ExFAT
+    BYTE exfatSignature[] = { 0x45, 0x58, 0x46, 0x41, 0x54 };
 	if (memcmp(buffer + 3, exfatSignature, sizeof(exfatSignature)) == 0) {
 		DetectedFS = L"EXFAT";
         return FSEnum::ExFAT;
     }
-    // Проверяем сигнатуру HFS+
+    // ГЏГ°Г®ГўГҐГ°ГїГҐГ¬ Г±ГЁГЈГ­Г ГІГіГ°Гі HFS+
     BYTE hfsPlusSignature[] = { 0x48, 0x2B, 0x0E, 0x0E };
 	if (memcmp(buffer + 1024, hfsPlusSignature, sizeof(hfsPlusSignature)) == 0) {
         DetectedFS = L"HFS+";
